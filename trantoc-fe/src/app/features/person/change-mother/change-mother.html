@@ -1,0 +1,76 @@
+<div class="container mt-4">
+
+  <h2>Đổi mẹ</h2>
+
+  @if (person()) {
+    <p class="text-muted mb-4">
+      Cho:
+
+      <strong>
+        {{ person()?.fullName }}
+      </strong>
+
+      @if (person()?.aliasName) {
+        (tức {{ person()?.aliasName }})
+      }
+    </p>
+  }
+
+  <div class="card mt-3">
+
+    <div class="card-body">
+
+      <div class="mb-3">
+
+        <label class="form-label">
+          Mẹ mới
+        </label>
+
+        <select
+          class="form-select"
+          [(ngModel)]="selectedMotherId">
+
+          @for (
+            mother of candidateMothers();
+            track mother.id
+            ) {
+
+            <option [ngValue]="mother.id">
+
+              {{ mother.fullName }}
+
+              @if (mother.aliasName) {
+                (tức {{ mother.aliasName }})
+              }
+
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+      <div class="d-flex gap-2">
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="save()">
+          Lưu
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancel()">
+          Hủy
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

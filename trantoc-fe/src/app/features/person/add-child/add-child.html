@@ -1,0 +1,157 @@
+<div class="card shadow-sm">
+
+  <div class="card-body">
+
+    <h2>Thêm con</h2>
+
+    @if (person()) {
+      <p class="text-muted mb-4">
+        Cho:
+
+        <strong>{{ person()?.fullName }}</strong>
+
+        @if (person()?.aliasName) {
+          (tức {{ person()?.aliasName }})
+        }
+      </p>
+    }
+
+    <div class="mb-3">
+
+      <label class="form-label">
+        Họ tên
+      </label>
+
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="fullName">
+
+    </div>
+
+    <div class="mb-3">
+
+      <label class="form-label">
+        Tên gọi khác (tức)
+      </label>
+
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="aliasName">
+
+    </div>
+
+    <div class="mb-3">
+
+      <label class="form-label">
+        Năm sinh
+      </label>
+
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="birthYear">
+
+    </div>
+
+    <div class="mb-3">
+
+      <label class="form-label">
+        Giới tính
+      </label>
+
+      <select
+        class="form-select"
+        [(ngModel)]="gender">
+
+        <option value="MALE">
+          Nam
+        </option>
+
+        <option value="FEMALE">
+          Nữ
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="mb-3">
+
+      <label class="form-label">
+        Mẹ
+      </label>
+
+      <select
+        class="form-select"
+        [(ngModel)]="selectedMotherId">
+
+        @if (spouses().length !== 1) {
+
+          <option [ngValue]="undefined">
+            -
+          </option>
+
+        }
+
+        @for (
+          spouse of spouses();
+          track spouse.id
+          ) {
+
+          <option [ngValue]="spouse.id">
+
+            {{ spouse.fullName }}
+
+            @if (spouse.aliasName) {
+              tức {{ spouse.aliasName }}
+            }
+
+          </option>
+
+        }
+
+      </select>
+
+    </div>
+
+    <div class="mb-4">
+
+      <label class="form-label">
+        Ghi chú
+      </label>
+
+      <textarea
+        class="form-control"
+        rows="5"
+        [(ngModel)]="notes">
+      </textarea>
+
+    </div>
+
+    <div class="d-flex gap-2">
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="save()">
+
+        Lưu
+
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="cancel()">
+
+        Quay lại
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
