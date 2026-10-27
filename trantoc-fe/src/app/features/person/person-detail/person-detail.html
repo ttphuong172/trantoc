@@ -332,6 +332,10 @@ person()?.role === 'DAUGHTER_IN_LAW') {
                 Thao tác
               </th>
 
+              <th>
+                Delete
+              </th>
+
             }
 
           </tr>
@@ -422,6 +426,12 @@ person()?.role === 'DAUGHTER_IN_LAW') {
 
                     }
 
+                  </td>
+
+                  <td>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteChild(child)">
+                      Delete
+                    </button>
                   </td>
 
                 }

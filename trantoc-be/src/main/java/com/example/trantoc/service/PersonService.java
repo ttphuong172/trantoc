@@ -380,15 +380,22 @@ public class PersonService {
                         new BusinessException(
                                 "Person not found"));
 
-        boolean hasRelations =
-                personRelationRepository.existsByPersonId(id)
-                        || personRelationRepository.existsByRelatedPersonId(id);
+        boolean hasSpouse =
+                !personRelationRepository
+                        .findByPersonIdAndRelationType(
+                                id,
+                                RelationType.SPOUSE)
+                        .isEmpty();
 
-        if (hasRelations) {
+        if (hasSpouse) {
 
             throw new BusinessException(
-                    "Cannot delete person with existing relations");
+                    "Cannot delete person with spouse");
         }
+
+        personRelationRepository.deleteAll(
+                personRelationRepository.findByPersonId(id)
+        );
 
         personRepository.delete(person);
     }

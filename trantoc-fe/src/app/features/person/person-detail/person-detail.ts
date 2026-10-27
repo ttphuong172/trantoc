@@ -107,6 +107,20 @@ export class PersonDetail implements OnInit {
     });
   }
 
+  deleteChild(child: ChildResponse): void {
+    if (!confirm(`Xóa ${child.fullName}?`)) {
+      return;
+    }
+
+    this.personService.deletePerson(child.id).subscribe(() => {
+      const personId = this.person()?.id;
+
+      if (personId) {
+        this.loadChildren(personId);
+      }
+    });
+  }
+
   changeMother(): void {
     this.router.navigate(['/persons', this.person()?.id, 'change-mother']);
   }
@@ -127,7 +141,6 @@ export class PersonDetail implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   handleShortcut(event: KeyboardEvent): void {
-
     const target = event.target as HTMLElement;
 
     if (
@@ -141,12 +154,8 @@ export class PersonDetail implements OnInit {
     if (event.altKey && event.key.toLowerCase() === 'c') {
       event.preventDefault();
 
-      this.router.navigate([
-        '/persons',
-        this.person()?.id,
-        'add-child'
-      ], {
-        queryParamsHandling: 'merge'
+      this.router.navigate(['/persons', this.person()?.id, 'add-child'], {
+        queryParamsHandling: 'merge',
       });
     }
   }

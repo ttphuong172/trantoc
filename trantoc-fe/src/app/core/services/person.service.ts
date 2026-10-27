@@ -79,4 +79,8 @@ export class PersonService {
   getGenerations() {
     return this.http.get<number[]>(`${this.apiUrl}/generations`);
   }
+
+  deletePerson(id: number) {
+    return this.http.delete<number>(`${this.apiUrl}/${id}`);
+  }
 }
