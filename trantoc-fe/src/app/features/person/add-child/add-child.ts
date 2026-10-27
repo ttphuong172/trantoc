@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild, ElementRef } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -41,6 +41,13 @@ export class AddChild implements OnInit {
   spouses = signal<PersonSummary[]>([]);
 
   selectedMotherId?: number;
+
+  @ViewChild('fullNameInput')
+  fullNameInput!: ElementRef<HTMLInputElement>;
+
+  ngAfterViewInit(): void {
+    this.fullNameInput.nativeElement.focus();
+  }
 
   ngOnInit(): void {
     const parentId = Number(this.route.snapshot.paramMap.get('id'));

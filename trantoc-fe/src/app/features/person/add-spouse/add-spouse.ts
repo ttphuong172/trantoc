@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild, ElementRef } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -34,6 +34,13 @@ export class AddSpouse implements OnInit {
   birthYear?: number;
 
   notes = '';
+
+  @ViewChild('fullNameInput')
+  fullNameInput!: ElementRef<HTMLInputElement>;
+
+  ngAfterViewInit(): void {
+    this.fullNameInput.nativeElement.focus();
+  }
 
   ngOnInit(): void {
     const personId = Number(this.route.snapshot.paramMap.get('id'));

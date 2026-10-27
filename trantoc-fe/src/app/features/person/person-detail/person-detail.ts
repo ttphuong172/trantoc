@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, HostListener } from '@angular/core';
 
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -123,5 +123,31 @@ export class PersonDetail implements OnInit {
         page: queryParams['returnPage'] || 0,
       },
     });
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleShortcut(event: KeyboardEvent): void {
+
+    const target = event.target as HTMLElement;
+
+    if (
+      target.tagName === 'INPUT' ||
+      target.tagName === 'TEXTAREA' ||
+      target.tagName === 'SELECT'
+    ) {
+      return;
+    }
+
+    if (event.altKey && event.key.toLowerCase() === 'c') {
+      event.preventDefault();
+
+      this.router.navigate([
+        '/persons',
+        this.person()?.id,
+        'add-child'
+      ], {
+        queryParamsHandling: 'merge'
+      });
+    }
   }
 }

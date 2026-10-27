@@ -50,6 +50,8 @@ export class FamilyTree implements OnInit {
 
       svg.call(zoom.transform, d3.zoomIdentity.translate(500, 50).scale(1));
 
+
+
       // Links
       g.selectAll('line')
         .data(root.links())
@@ -59,7 +61,7 @@ export class FamilyTree implements OnInit {
         .attr('y1', (d) => d.source.y! + 40) // đáy card cha
         .attr('x2', (d) => d.target.x!)
         .attr('y2', (d) => d.target.y! - 40) // đỉnh card con
-        .attr('stroke', '#999');
+        .attr('stroke', '#000');
 
       // Nodes
       const nodes = g
@@ -73,33 +75,70 @@ export class FamilyTree implements OnInit {
       // Card
       nodes
         .append('rect')
-        .attr('x', -30)
+        .attr('x', (d: any) => {
+          switch (d.depth) {
+            case 0:
+              return -400;
+
+            default:
+              return -30;
+          }
+        })
         .attr('y', -40)
-        .attr('width', 60)
+        .attr('width', (d: any) => {
+          switch (d.depth) {
+            case 0:
+              return 800;
+
+            default:
+              return 60;
+          }
+        })
         .attr('height', 80)
         .attr('rx', 4)
         .attr('fill', '#fff')
-        .attr('stroke', '#4CAF50')
-        .attr('stroke-width', 2);
+        .attr('stroke', '#000')
+        .attr('stroke-width', (d: any) => {
+          switch (d.depth) {
+            case 0:
+              return 4;
+
+            default:
+              return 2;
+          }
+        });
 
       // Full name vertical
       nodes.each(function (d) {
-        const lines = d.data.fullName.split(' ');
 
-        const text = d3
-          .select(this)
-          .append('text')
-          .attr('text-anchor', 'middle')
-          .style('font-size', '11px');
+          if (d.depth === 0) {
+            d3.select(this)
+              .append('text')
+              .attr('text-anchor', 'middle')
+              .attr('dominant-baseline', 'middle')
+              .style('font-size', '48px')
+              .style('font-weight', '700')
+              .text(d.data.fullName);
 
-        lines.forEach((line: string, index: number) => {
-          text
-            .append('tspan')
-            .attr('x', 0)
-            .attr('y', -20 + index * 14)
-            .text(line);
+            return;
+          }
+
+          const lines = d.data.fullName.split(' ');
+
+          const text = d3
+            .select(this)
+            .append('text')
+            .attr('text-anchor', 'middle')
+            .style('font-size', '11px');
+
+          lines.forEach((line: string, index: number) => {
+            text
+              .append('tspan')
+              .attr('x', 0)
+              .attr('y', -20 + index * 18)
+              .text(line);
+          });
         });
-      });
     });
   }
 
