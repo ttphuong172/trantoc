@@ -9,6 +9,7 @@ import java.util.List;
 public record AncestorNode(
         Long id,
         String fullName,
+        String aliasName,
         Gender gender,
         Integer birthYear,
         Integer deathYear,

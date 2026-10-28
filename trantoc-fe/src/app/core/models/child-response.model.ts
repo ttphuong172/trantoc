@@ -4,5 +4,6 @@ export interface ChildResponse {
   aliasName?: string;
   gender?:string;
   childOrder: number;
-  motherName: string
+  motherName: string;
+  canDelete: boolean;
 }

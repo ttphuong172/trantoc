@@ -80,7 +80,15 @@ export class PersonDetail implements OnInit {
   }
 
   private loadChildren(personId: number): void {
-    this.personService.getChildren(personId).subscribe((children) => this.children.set(children));
+    this.personService
+      .getChildren(personId)
+      .subscribe((children) => this.children.set(children));
+  }
+
+  private loadSpouses(personId: number): void {
+    this.personService
+      .getSpouses(personId)
+      .subscribe((spouses) => this.spouses.set(spouses));
   }
 
   moveUp(child: ChildResponse): void {
@@ -121,8 +129,33 @@ export class PersonDetail implements OnInit {
     });
   }
 
+  deleteSpouse(spouseId: number): void {
+
+    if (!confirm('Xóa vợ/chồng này?')) {
+      return;
+    }
+
+    const personId = this.person()?.id;
+
+    if (!personId) {
+      return;
+    }
+
+    this.personService
+      .deleteSpouse(personId, spouseId)
+      .subscribe(() => {
+
+        this.loadSpouses(personId);
+
+      });
+  }
+
   changeMother(): void {
-    this.router.navigate(['/persons', this.person()?.id, 'change-mother']);
+    this.router.navigate([
+      '/persons',
+      this.person()?.id,
+      'change-mother'
+    ]);
   }
 
   goToList(): void {
@@ -131,9 +164,7 @@ export class PersonDetail implements OnInit {
     this.router.navigate(['/'], {
       queryParams: {
         keyword: queryParams['returnKeyword'] || null,
-
         generation: queryParams['returnGeneration'] || null,
-
         page: queryParams['returnPage'] || 0,
       },
     });
@@ -154,9 +185,12 @@ export class PersonDetail implements OnInit {
     if (event.altKey && event.key.toLowerCase() === 'c') {
       event.preventDefault();
 
-      this.router.navigate(['/persons', this.person()?.id, 'add-child'], {
-        queryParamsHandling: 'merge',
-      });
+      this.router.navigate(
+        ['/persons', this.person()?.id, 'add-child'],
+        {
+          queryParamsHandling: 'merge',
+        }
+      );
     }
   }
 }

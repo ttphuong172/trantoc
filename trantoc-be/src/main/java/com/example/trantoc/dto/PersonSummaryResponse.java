@@ -3,6 +3,7 @@ package com.example.trantoc.dto;
 public record PersonSummaryResponse(
         Long id,
         String fullName,
-        String aliasName
+        String aliasName,
+        boolean canDelete
 ) {
 }

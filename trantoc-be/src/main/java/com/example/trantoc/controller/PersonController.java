@@ -157,5 +157,15 @@ public class PersonController {
         return personRelationService.buildPath(id);
     }
 
+    @DeleteMapping("/{personId}/spouses/{spouseId}")
+    public void deleteSpouse(
+            @PathVariable Long personId,
+            @PathVariable Long spouseId) {
+
+        personRelationService.deleteSpouse(
+                personId,
+                spouseId);
+    }
+
 
 }

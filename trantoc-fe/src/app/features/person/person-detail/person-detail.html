@@ -247,6 +247,14 @@ person()?.role === 'DAUGHTER') {
               </div>
 
             }
+            @if (spouse.canDelete) {
+              <a
+                href="javascript:void(0)"
+                class="text-danger ms-2"
+                (click)="deleteSpouse(spouse.id)">
+                [Xóa]
+              </a>
+            }
 
           </li>
 
@@ -324,16 +332,16 @@ person()?.role === 'DAUGHTER_IN_LAW') {
               </th>
             }
 
-            <th>Vai trò</th>
+            <th style="text-align: center">Vai trò</th>
 
             @if (person()?.role === 'SON') {
 
-              <th style="width: 100px">
-                Thao tác
+              <th style="text-align: center">
+                Sắp xếp
               </th>
 
-              <th>
-                Delete
+              <th style="text-align: center">
+                Thao tác
               </th>
 
             }
@@ -386,7 +394,7 @@ person()?.role === 'DAUGHTER_IN_LAW') {
 
                 }
 
-                <td>
+                <td style="text-align: center">
                   @if (child.gender === 'MALE') {
                     <span class="badge bg-primary">
       Con trai
@@ -428,12 +436,13 @@ person()?.role === 'DAUGHTER_IN_LAW') {
 
                   </td>
 
-                  <td>
-                    <button class="btn btn-sm btn-outline-danger" (click)="deleteChild(child)">
-                      Delete
-                    </button>
-                  </td>
-
+                  @if (child.canDelete){
+                    <td style="text-align: center">
+                      <button class="btn btn-sm btn-outline-danger" (click)="deleteChild(child)">
+                        Delete
+                      </button>
+                    </td>
+                  }
                 }
 
               </tr>

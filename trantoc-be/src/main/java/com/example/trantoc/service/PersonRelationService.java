@@ -256,6 +256,7 @@ public class PersonRelationService {
         return AncestorNode.builder()
                 .id(person.getId())
                 .fullName(person.getFullName())
+                .aliasName(person.getAliasName())
                 .gender(person.getGender())
                 .birthYear(person.getBirthYear())
                 .deathYear(person.getDeathYear())
@@ -281,8 +282,7 @@ public class PersonRelationService {
                         r.getRelationType() == RelationType.FATHER || r.getRelationType() == RelationType.MOTHER)
                 .sorted(
                         Comparator.comparing(
-                                PersonRelation::getChildOrder,
-                                Comparator.nullsLast(Integer::compareTo)
+                                this::getDisplayChildOrder
                         )
                 )
                 .map(r -> {
@@ -304,11 +304,56 @@ public class PersonRelationService {
                             r.getPerson().getAliasName(),
                             r.getPerson().getGender(),
                             r.getChildOrder(),
-                            motherName
+                            motherName,
+                            canDelete(r.getPerson().getId())
                     );
 
                 })
                 .toList();
+    }
+
+    private Integer getDisplayChildOrder(PersonRelation relation) {
+
+        if (relation.getChildOrder() != null) {
+            return relation.getChildOrder();
+        }
+
+        return personRelationRepository
+                .findByPersonIdAndRelationType(
+                        relation.getPerson().getId(),
+                        RelationType.FATHER)
+                .stream()
+                .findFirst()
+                .map(PersonRelation::getChildOrder)
+                .orElse(Integer.MAX_VALUE);
+    }
+
+    private boolean canDelete(Long personId) {
+
+        boolean hasSpouse =
+                !personRelationRepository
+                        .findByPersonIdAndRelationType(
+                                personId,
+                                RelationType.SPOUSE)
+                        .isEmpty();
+
+        boolean hasFatherChildren =
+                !personRelationRepository
+                        .findByRelatedPersonIdAndRelationType(
+                                personId,
+                                RelationType.FATHER)
+                        .isEmpty();
+
+        boolean hasMotherChildren =
+                !personRelationRepository
+                        .findByRelatedPersonIdAndRelationType(
+                                personId,
+                                RelationType.MOTHER)
+                        .isEmpty();
+
+        return !hasSpouse
+                && !hasFatherChildren
+                && !hasMotherChildren;
     }
 
 
@@ -322,10 +367,31 @@ public class PersonRelationService {
                 .map(r -> new PersonSummaryResponse(
                         r.getRelatedPerson().getId(),
                         r.getRelatedPerson().getFullName(),
-                        r.getRelatedPerson().getAliasName()
+                        r.getRelatedPerson().getAliasName(),
+                        canDeleteSpouse(r.getRelatedPerson().getId())
                 ))
                 .toList();
     }
+
+    private boolean canDeleteSpouse(Long spouseId) {
+
+        boolean hasChildren =
+                !personRelationRepository
+                        .findByRelatedPersonIdAndRelationType(
+                                spouseId,
+                                RelationType.MOTHER)
+                        .isEmpty()
+                        ||
+                        !personRelationRepository
+                                .findByRelatedPersonIdAndRelationType(
+                                        spouseId,
+                                        RelationType.FATHER)
+                                .isEmpty();
+
+        return !hasChildren;
+    }
+
+
 
     public ParentResponse getParents(Long personId) {
 
@@ -344,7 +410,8 @@ public class PersonRelationService {
                 father = new PersonSummaryResponse(
                         person.getId(),
                         person.getFullName(),
-                        person.getAliasName()
+                        person.getAliasName(),
+                        false
                 );
             }
 
@@ -355,7 +422,8 @@ public class PersonRelationService {
                 mother = new PersonSummaryResponse(
                         person.getId(),
                         person.getFullName(),
-                        person.getAliasName()
+                        person.getAliasName(),
+                        false
                 );
             }
         }
@@ -744,6 +812,32 @@ public class PersonRelationService {
         return Integer.compare(
                 a.size(),
                 b.size());
+    }
+
+    public void deleteSpouse(
+            Long personId,
+            Long spouseId) {
+
+        if (!canDeleteSpouse(spouseId)) {
+            throw new BusinessException(
+                    "Cannot delete spouse");
+        }
+
+        personRelationRepository
+                .findByPersonIdAndRelatedPersonIdAndRelationType(
+                        personId,
+                        spouseId,
+                        RelationType.SPOUSE)
+                .ifPresent(personRelationRepository::delete);
+
+        personRelationRepository
+                .findByPersonIdAndRelatedPersonIdAndRelationType(
+                        spouseId,
+                        personId,
+                        RelationType.SPOUSE)
+                .ifPresent(personRelationRepository::delete);
+
+        personRepository.deleteById(spouseId);
     }
 
 }

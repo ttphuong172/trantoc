@@ -8,6 +8,7 @@ public record ChildResponse(
         String aliasName,
         Gender gender,
         Integer childOrder,
-        String motherName
+        String motherName,
+        boolean canDelete
 ) {
 }

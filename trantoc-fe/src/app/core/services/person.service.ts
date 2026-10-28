@@ -83,4 +83,8 @@ export class PersonService {
   deletePerson(id: number) {
     return this.http.delete<number>(`${this.apiUrl}/${id}`);
   }
+
+  deleteSpouse(personId: number, spouseId: number) {
+    return this.http.delete<number>(`${this.apiUrl}/${personId}/spouses/${spouseId}`);
+  }
 }
