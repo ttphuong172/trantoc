@@ -35,6 +35,12 @@ public class Person {
 
     private Integer generation;
 
+    private String address;
+
+    private String burialPlace;
+
+    private String deathAnniversary;
+
     @Column(length = 5000)
     private String notes;
 

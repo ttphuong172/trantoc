@@ -15,6 +15,12 @@ export interface PersonDetailResponse {
 
   gender: string;
 
+  address?: string;
+
+  burialPlace: string;
+
+  deathAnniversary: string;
+
   rootAncestor: boolean;
 
   role: string;

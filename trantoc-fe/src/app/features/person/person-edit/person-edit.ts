@@ -29,6 +29,12 @@ export class PersonEdit implements OnInit {
 
   deathYear?: number;
 
+  address = '';
+
+  deathAnniversary = '';
+
+  burialPlace = '';
+
   gender = 'MALE';
 
   rootAncestor = false;
@@ -48,6 +54,12 @@ export class PersonEdit implements OnInit {
       this.gender = person.gender;
       this.rootAncestor = person.rootAncestor;
       this.notes = person.notes ?? '';
+      this.address = person.address ?? '';
+
+      this.deathAnniversary = person.deathAnniversary ?? '';
+
+      this.burialPlace =
+        person.burialPlace ?? '';
 
       this.cdr.detectChanges();
     });
@@ -60,10 +72,17 @@ export class PersonEdit implements OnInit {
       .updatePerson(id, {
         fullName: this.fullName,
         aliasName: this.aliasName,
+
         birthYear: this.birthYear,
         deathYear: this.deathYear,
+
         gender: this.gender,
         rootAncestor: this.rootAncestor,
+
+        address: this.address,
+        deathAnniversary: this.deathAnniversary,
+        burialPlace: this.burialPlace,
+
         notes: this.notes,
       })
       .subscribe(() => {

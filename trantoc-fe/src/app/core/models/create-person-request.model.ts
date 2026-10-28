@@ -4,12 +4,17 @@ export interface CreatePersonRequest {
   aliasName?: string;
 
   birthYear?: number;
-
   deathYear?: number;
 
   gender: string;
 
   rootAncestor: boolean;
+
+  address?: string;
+
+  burialPlace?: string;
+
+  deathAnniversary?: string;
 
   notes?: string;
 }

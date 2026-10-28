@@ -62,6 +62,9 @@ public class PersonService {
                 person.getDeathYear(),
                 person.getNotes(),
                 person.getGender(),
+                person.getAddress(),
+                person.getBurialPlace(),
+                person.getDeathAnniversary(),
                 person.getRootAncestor(),
                 determineRole(person)
         );
@@ -87,6 +90,14 @@ public class PersonService {
         person.setDeathYear(request.getDeathYear());
 
         person.setGender(request.getGender());
+
+        person.setAddress(request.getAddress());
+
+        person.setBurialPlace(
+                request.getBurialPlace());
+
+        person.setDeathAnniversary(
+                request.getDeathAnniversary());
 
         person.setRootAncestor(
                 request.getRootAncestor());

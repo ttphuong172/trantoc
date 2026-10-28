@@ -26,7 +26,9 @@
         #fullNameInput
         type="text"
         class="form-control"
-        [(ngModel)]="fullName">
+        [(ngModel)]="fullName"
+        (ngModelChange)="onFullNameChange($event)">
+
 
     </div>
 
@@ -54,6 +56,15 @@
         class="form-control"
         [(ngModel)]="birthYear">
 
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Năm mất</label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="deathYear"
+        name="deathYear">
     </div>
 
     <div class="mb-3">
@@ -114,6 +125,37 @@
         }
 
       </select>
+
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Địa chỉ</label>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="address"
+        name="address">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Kỵ ngày</label>
+      <textarea
+        class="form-control"
+        rows="2"
+        [(ngModel)]="deathAnniversary"
+        name="deathAnniversary">
+  </textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Mộ táng tại</label>
+      <textarea
+        class="form-control"
+        rows="2"
+        [(ngModel)]="burialPlace"
+        name="burialPlace">
+  </textarea>
+
 
     </div>
 

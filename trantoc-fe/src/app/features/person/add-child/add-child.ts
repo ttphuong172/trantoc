@@ -32,6 +32,14 @@ export class AddChild implements OnInit {
 
   birthYear?: number;
 
+  deathYear?: number;
+
+  address = '';
+
+  deathAnniversary = '';
+
+  burialPlace = '';
+
   gender = 'MALE';
 
   notes = '';
@@ -68,46 +76,53 @@ export class AddChild implements OnInit {
   save(): void {
     const fatherId = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.personService
-      .createPerson({
-        fullName: this.fullName,
-        aliasName: this.aliasName,
-        birthYear: this.birthYear,
-        gender: this.gender,
-        rootAncestor: false,
-        notes: this.notes,
-      })
+    this.personService.createPerson({
+      fullName: this.fullName,
+      aliasName: this.aliasName,
+
+      birthYear: this.birthYear,
+      deathYear: this.deathYear,
+
+      gender: this.gender,
+      rootAncestor: false,
+
+      address: this.address,
+      deathAnniversary: this.deathAnniversary,
+      burialPlace: this.burialPlace,
+
+      notes: this.notes,
+    })
       .subscribe((person) => {
-        this.relationService
-          .create({
-            personId: person.id,
-            relatedPersonId: fatherId,
-            relationType: 'FATHER',
-          })
-          .subscribe(() => {
-            // Có chọn mẹ
-            if (this.selectedMotherId) {
-              this.relationService
-                .create({
-                  personId: person.id,
-                  relatedPersonId: this.selectedMotherId,
-                  relationType: 'MOTHER',
-                })
-                .subscribe(() => {
-                  this.router.navigate(['/persons', fatherId], {
-                    queryParams: this.route.snapshot.queryParams,
-                  });
+      this.relationService
+        .create({
+          personId: person.id,
+          relatedPersonId: fatherId,
+          relationType: 'FATHER',
+        })
+        .subscribe(() => {
+          // Có chọn mẹ
+          if (this.selectedMotherId) {
+            this.relationService
+              .create({
+                personId: person.id,
+                relatedPersonId: this.selectedMotherId,
+                relationType: 'MOTHER',
+              })
+              .subscribe(() => {
+                this.router.navigate(['/persons', fatherId], {
+                  queryParams: this.route.snapshot.queryParams,
                 });
+              });
 
-              return;
-            }
+            return;
+          }
 
-            // Không chọn mẹ (_)
-            this.router.navigate(['/persons', fatherId], {
-              queryParams: this.route.snapshot.queryParams,
-            });
+          // Không chọn mẹ (_)
+          this.router.navigate(['/persons', fatherId], {
+            queryParams: this.route.snapshot.queryParams,
           });
-      });
+        });
+    });
   }
 
   cancel(): void {
@@ -116,5 +131,17 @@ export class AddChild implements OnInit {
     this.router.navigate(['/persons', personId], {
       queryParams: this.route.snapshot.queryParams,
     });
+  }
+
+  onFullNameChange(value: string): void {
+    if (!value) {
+      return;
+    }
+
+    const lowerName = value.toLowerCase();
+
+    if (lowerName.includes(' thị ')) {
+      this.gender = 'FEMALE';
+    }
   }
 }

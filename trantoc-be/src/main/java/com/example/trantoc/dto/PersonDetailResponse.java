@@ -12,6 +12,9 @@ public record PersonDetailResponse(
         Integer deathYear,
         String notes,
         Gender gender,
+        String address,
+        String burialPlace,
+        String deathAnniversary,
         Boolean rootAncestor,
         FamilyRole role
 ) {
